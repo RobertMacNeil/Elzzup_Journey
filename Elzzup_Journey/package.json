@@ -1,0 +1,31 @@
+{
+  "name": "game-programming-createjs-webpack",
+  "version": "1.0.0",
+  "description": "Game Programming CreateJS Webpack Setup",
+  "main": "Game.js",
+  "scripts": {
+    "release": "webpack --progress --mode production --output-path ./release",
+    "game": "webpack-dev-server --open"
+  },
+  "author": "Sean Morrow",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/createjs": "^0.0.29",
+    "copy-webpack-plugin": "^5.0.3",
+    "createjs": "^1.0.1",
+    "exports-loader": "^0.7.0",
+    "imports-loader": "^0.8.0",
+    "ts-loader": "^6.0.0",
+    "typescript": "^3.4.5",
+    "webpack": "^4.29.3",
+    "webpack-cli": "^3.2.3",
+    "webpack-dev-server": "^3.3.1"
+  },
+  "jshintConfig": {
+    "esversion": 8,
+    "strict": "implied",
+    "browser": true,
+    "devel": true,
+    "node": true
+  }
+}
