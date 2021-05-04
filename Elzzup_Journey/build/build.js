@@ -10164,21 +10164,27 @@ exports.FRAME_RATE = 30;
 exports.ASSET_MANIFEST = [
     {
         type: "json",
-        src: "./lib/spritesheets/assets.json",
-        id: "assets",
+        src: "./lib/spritesheets/Assets.json",
+        id: "Assets",
         data: 0
     },
     {
         type: "image",
-        src: "./lib/spritesheets/assets.png",
-        id: "assets",
+        src: "./lib/spritesheets/Assets.png",
+        id: "Assets",
         data: 0
     },
     {
-        type: "sound",
-        src: "./lib/sounds/beep.ogg",
-        id: "beep",
-        data: 4
+        type: "json",
+        src: "./lib/spritesheets/Glyphs.json",
+        id: "Glyphs",
+        data: 0
+    },
+    {
+        type: "image",
+        src: "./lib/spritesheets/Glyphs.png",
+        id: "Glyphs",
+        data: 0
     }
 ];
 
@@ -10198,11 +10204,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __webpack_require__(/*! createjs */ "./node_modules/createjs/builds/1.0.0/createjs.min.js");
 const Constants_1 = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
 const AssetManager_1 = __webpack_require__(/*! ./AssetManager */ "./src/AssetManager.ts");
+const Player_1 = __webpack_require__(/*! ./Player */ "./src/Player.ts");
 let stage;
 let canvas;
 let assetManager;
+let background;
+let player;
 function onReady(e) {
     console.log(">> adding sprites to game");
+    background = assetManager.getSprite("Assets", "TitleScreenPH");
+    stage.addChild(background);
+    player = new Player_1.default(stage, assetManager);
     createjs.Ticker.framerate = Constants_1.FRAME_RATE;
     createjs.Ticker.on("tick", onTick);
     console.log(">> game ready");
@@ -10226,6 +10238,27 @@ main();
 
 /***/ }),
 
+/***/ "./src/Player.ts":
+/*!***********************!*\
+  !*** ./src/Player.ts ***!
+  \***********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+class Player {
+    constructor(stage, assetManager) {
+        this._sprite = assetManager.getSprite("Assets", "PlayerPH", 300, 300);
+        stage.addChild(this._sprite);
+    }
+}
+exports.default = Player;
+
+
+/***/ }),
+
 /***/ 0:
 /*!*****************************************************************************!*\
   !*** multi (webpack)-dev-server/client?http://localhost:5005 ./src/Game.ts ***!
@@ -10233,7 +10266,7 @@ main();
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /Users/seanmorrow/OneDrive - Nova Scotia Community College/_workspace/GAME2050 Game Programming I/unit04/4-1/boilerplateGame/node_modules/webpack-dev-server/client/index.js?http://localhost:5005 */"./node_modules/webpack-dev-server/client/index.js?http://localhost:5005");
+__webpack_require__(/*! C:\Users\froze\Desktop\Portfolio2021\TypeScriptGames\Elzzup_Journey\Elzzup_Journey\node_modules\webpack-dev-server\client\index.js?http://localhost:5005 */"./node_modules/webpack-dev-server/client/index.js?http://localhost:5005");
 module.exports = __webpack_require__(/*! ./src/Game.ts */"./src/Game.ts");
 
 

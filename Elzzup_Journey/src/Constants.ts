@@ -6,20 +6,32 @@ export const FRAME_RATE:number = 30;
 export const ASSET_MANIFEST:Object[] = [
     {
         type:"json",
-        src:"./lib/spritesheets/assets.json",
-        id:"assets",
+        src:"./lib/spritesheets/Assets.json",
+        id:"Assets",
         data:0
     },
     {
         type:"image",
-        src:"./lib/spritesheets/assets.png",
-        id:"assets",
+        src:"./lib/spritesheets/Assets.png",
+        id:"Assets",
         data:0
     },
+    {
+        type:"json",
+        src:"./lib/spritesheets/Glyphs.json",
+        id:"Glyphs",
+        data:0
+    },
+    {
+        type:"image",
+        src:"./lib/spritesheets/Glyphs.png",
+        id:"Glyphs",
+        data:0
+    }/*,
     {
         type:"sound",
         src:"./lib/sounds/beep.ogg",
         id:"beep",
         data:4
-    }     
+    }     */
 ];

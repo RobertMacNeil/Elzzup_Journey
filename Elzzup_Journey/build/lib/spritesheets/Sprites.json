@@ -1,7 +1,7 @@
 {
 
 "images": [
-    "Assets.png"
+    "Sprites.png"
 ],
 
 "framerate": 30,
@@ -22,7 +22,7 @@
 },
 
 "texturepacker": [
-        "SmartUpdateHash: $TexturePacker:SmartUpdate:8e6eca8aea7a1b3c798d1423d77e211b:c23498a348955eb368c2e89fe487561f:343a2cbedbd3a58ea401ebc8df9c4834$",
+        "SmartUpdateHash: $TexturePacker:SmartUpdate:02c3c79acb7f6b00edc7b9dd320c344a:c23498a348955eb368c2e89fe487561f:3cdb13131f548fed5fbd9288201b06ea$",
         "Created with TexturePacker (https://www.codeandweb.com/texturepacker) for EaselJS"
 ]
 

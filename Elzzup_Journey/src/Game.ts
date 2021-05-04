@@ -6,6 +6,7 @@ import "createjs";
 // importing game constants
 import { STAGE_WIDTH, STAGE_HEIGHT, FRAME_RATE, ASSET_MANIFEST } from "./Constants";
 import AssetManager from "./AssetManager";
+import Player from "./Player";
 
 // game variables
 let stage:createjs.StageGL;
@@ -13,13 +14,21 @@ let canvas:HTMLCanvasElement;
 // assetmanager object
 let assetManager:AssetManager;
 
+//Game objects
+let background:createjs.Sprite;
+let player:Player;
 
 // --------------------------------------------------- event handlers
 function onReady(e:createjs.Event):void {
     console.log(">> adding sprites to game");
 
     // construct game objects/sprites
-    // ...
+    
+    background = assetManager.getSprite("Assets", "TitleScreenPH");
+    stage.addChild(background);
+
+    player = new Player(stage, assetManager);
+    
 
     // startup the ticker
     createjs.Ticker.framerate = FRAME_RATE;
