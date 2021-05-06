@@ -8,8 +8,8 @@
 "frames": [
     [1, 1, 600, 600, 0, 0, 0],
     [1, 603, 600, 600, 0, 0, 0],
-    [603, 603, 128, 64, 0, 0, 0],
-    [733, 603, 20, 64, 0, -7, 0],
+    [603, 603, 128, 64, 0, 64, 32],
+    [733, 603, 20, 64, 0, 9, 32],
     [1, 1205, 600, 600, 0, 0, 0]
 ],
 
@@ -22,7 +22,7 @@
 },
 
 "texturepacker": [
-        "SmartUpdateHash: $TexturePacker:SmartUpdate:8e6eca8aea7a1b3c798d1423d77e211b:c23498a348955eb368c2e89fe487561f:343a2cbedbd3a58ea401ebc8df9c4834$",
+        "SmartUpdateHash: $TexturePacker:SmartUpdate:464ed3502fa5a84a4f86caade36ae91b:c23498a348955eb368c2e89fe487561f:343a2cbedbd3a58ea401ebc8df9c4834$",
         "Created with TexturePacker (https://www.codeandweb.com/texturepacker) for EaselJS"
 ]
 

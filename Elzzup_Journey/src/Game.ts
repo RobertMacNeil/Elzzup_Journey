@@ -8,6 +8,11 @@ import { STAGE_WIDTH, STAGE_HEIGHT, FRAME_RATE, ASSET_MANIFEST } from "./Constan
 import AssetManager from "./AssetManager";
 import Player from "./Player";
 
+//current state of keys
+let upKey:boolean = false;
+let leftKey:boolean = false;
+let rightKey:boolean = false;
+
 // game variables
 let stage:createjs.StageGL;
 let canvas:HTMLCanvasElement;
@@ -16,6 +21,8 @@ let assetManager:AssetManager;
 
 //Game objects
 let background:createjs.Sprite;
+let gameScreen:createjs.Sprite;
+let startButton:createjs.Sprite;
 let player:Player;
 
 // --------------------------------------------------- event handlers
@@ -27,8 +34,17 @@ function onReady(e:createjs.Event):void {
     background = assetManager.getSprite("Assets", "TitleScreenPH");
     stage.addChild(background);
 
+    startButton = assetManager.getSprite("Assets", "PlayButtonPH", 300, 400);
+    stage.addChild(startButton);
+
+    startButton.addEventListener("click", monitorClicks);
+
+    gameScreen = assetManager.getSprite("Assets", "GameScreen1PH");
+
     player = new Player(stage, assetManager);
     
+    document.onkeydown = onKeyDown;
+    document.onkeyup = onKeyUp;
 
     // startup the ticker
     createjs.Ticker.framerate = FRAME_RATE;
@@ -36,12 +52,67 @@ function onReady(e:createjs.Event):void {
     console.log(">> game ready");
 }
 
+//---------------------------------private methods
+function monitorClicks(e:createjs.Event):void {
+    if (e.target = startButton){
+        stage.removeChild(background);
+        stage.removeChild(startButton);
+        e.remove();
+        stage.addChildAt(gameScreen, 0);
+    }
+}
+
+function monitorKeys():void
+{
+    if (leftKey)
+    {
+        player.direction = Player.LEFT;
+        player.startMe();
+    }
+    else if (rightKey)
+    {
+        player.direction = Player.RIGHT;
+        player.startMe();
+    }
+    else if (upKey)
+    {
+        player.direction = Player.UP;
+        player.startMe();
+    }
+    else
+    {
+        player.stopMe();
+    }
+}
+
+function onKeyDown(e:KeyboardEvent):void
+{
+    console.log("key pressed down: " + e.key);
+    if (e.key == "ArrowLeft") leftKey = true;
+    else if (e.key == "ArrowRight") rightKey = true;
+    else if (e.key == "ArrowUp") upKey = true;
+}
+
+function onKeyUp(e:KeyboardEvent):void
+{
+    console.log("key released up: " + e.key);
+    if (e.key == "ArrowLeft") leftKey = false;
+    else if (e.key == "ArrowRight") rightKey = false;
+    else if (e.key == "ArrowUp") upKey = false;
+
+    if(e.key == " ")
+    {
+        console.log("JUMP!!!");
+    }
+}
+
 function onTick(e:createjs.Event):void {
     // TESTING FPS
     document.getElementById("fps").innerHTML = String(createjs.Ticker.getMeasuredFPS());
 
     // This is your game loop :)
-    // ...
+    monitorKeys();
+    player.update();
 
     // update the stage!
     stage.update();
