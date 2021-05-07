@@ -39,7 +39,7 @@ function onReady(e:createjs.Event):void {
 
     startButton.addEventListener("click", monitorClicks);
 
-    gameScreen = assetManager.getSprite("Assets", "GameScreen1PH");
+    gameScreen = assetManager.getSprite("Assets", "GameScreenBackGround1PH");
 
     player = new Player(stage, assetManager);
     

@@ -10222,7 +10222,7 @@ function onReady(e) {
     startButton = assetManager.getSprite("Assets", "PlayButtonPH", 300, 400);
     stage.addChild(startButton);
     startButton.addEventListener("click", monitorClicks);
-    gameScreen = assetManager.getSprite("Assets", "GameScreen1PH");
+    gameScreen = assetManager.getSprite("Assets", "GameScreenBackGround1PH");
     player = new Player_1.default(stage, assetManager);
     document.onkeydown = onKeyDown;
     document.onkeyup = onKeyUp;
