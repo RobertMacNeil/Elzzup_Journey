@@ -98,7 +98,6 @@ function onKeyUp(e:KeyboardEvent):void
     console.log("key released up: " + e.key);
     if (e.key == "ArrowLeft") leftKey = false;
     else if (e.key == "ArrowRight") rightKey = false;
-    else if (e.key == "ArrowUp") upKey = false;
 
     if(e.key == " ")
     {

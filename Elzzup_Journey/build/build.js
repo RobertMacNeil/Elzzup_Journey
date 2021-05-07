@@ -10270,8 +10270,6 @@ function onKeyUp(e) {
         leftKey = false;
     else if (e.key == "ArrowRight")
         rightKey = false;
-    else if (e.key == "ArrowUp")
-        upKey = false;
     if (e.key == " ") {
         console.log("JUMP!!!");
     }

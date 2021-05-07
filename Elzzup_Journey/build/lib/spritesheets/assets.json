@@ -6,23 +6,25 @@
 
 "framerate": 30,
 "frames": [
-    [1, 1, 600, 600, 0, 0, 0],
+    [1, 1, 20, 64, 0, 9, 32],
+    [23, 1, 128, 64, 0, 64, 32],
+    [153, 1, 600, 600, 0, 0, 0],
     [1, 603, 600, 600, 0, 0, 0],
-    [603, 603, 128, 64, 0, 64, 32],
-    [733, 603, 20, 64, 0, 9, 32],
-    [1, 1205, 600, 600, 0, 0, 0]
+    [1, 1205, 600, 50, 0, 0, 0],
+    [1, 1257, 600, 600, 0, 0, 0]
 ],
 
 "animations": {
-    "GameScreenBackGround1PH": { "frames": [0] },
-    "GameScreenBackGround2PH": { "frames": [1] },
-    "PlayButtonPH": { "frames": [2] },
-    "PlayerPH": { "frames": [3] },
-    "TitleScreenPH": { "frames": [4] }
+    "PlayerPH": { "frames": [0] },
+    "PlayButtonPH": { "frames": [1] },
+    "GameScreenBackGround1PH": { "frames": [2] },
+    "GameScreenBackGround2PH": { "frames": [3] },
+    "Ground600Tile": { "frames": [4] },
+    "TitleScreenPH": { "frames": [5] }
 },
 
 "texturepacker": [
-        "SmartUpdateHash: $TexturePacker:SmartUpdate:464ed3502fa5a84a4f86caade36ae91b:c23498a348955eb368c2e89fe487561f:343a2cbedbd3a58ea401ebc8df9c4834$",
+        "SmartUpdateHash: $TexturePacker:SmartUpdate:04cb4c81190f2f5d736e881f25a20adc:13b73ef1a8e606fe568a682f178477ad:343a2cbedbd3a58ea401ebc8df9c4834$",
         "Created with TexturePacker (https://www.codeandweb.com/texturepacker) for EaselJS"
 ]
 
