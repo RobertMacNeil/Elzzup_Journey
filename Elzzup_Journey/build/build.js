@@ -10157,10 +10157,12 @@ exports.default = AssetManager;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ASSET_MANIFEST = exports.FRAME_RATE = exports.STAGE_HEIGHT = exports.STAGE_WIDTH = void 0;
+exports.ASSET_MANIFEST = exports.SPAWNPOINT_Y = exports.SPAWNPOINT_X = exports.FRAME_RATE = exports.STAGE_HEIGHT = exports.STAGE_WIDTH = void 0;
 exports.STAGE_WIDTH = 600;
 exports.STAGE_HEIGHT = 600;
 exports.FRAME_RATE = 30;
+exports.SPAWNPOINT_X = 50;
+exports.SPAWNPOINT_Y = 400;
 exports.ASSET_MANIFEST = [
     {
         type: "json",
@@ -10208,6 +10210,7 @@ const Player_1 = __webpack_require__(/*! ./Player */ "./src/Player.ts");
 let upKey = false;
 let leftKey = false;
 let rightKey = false;
+let spacebar = false;
 let stage;
 let canvas;
 let assetManager;
@@ -10217,11 +10220,11 @@ let startButton;
 let player;
 function onReady(e) {
     console.log(">> adding sprites to game");
-    background = assetManager.getSprite("Assets", "TitleScreenPH");
+    background = assetManager.getSprite("Assets", "TitleScreen");
     stage.addChild(background);
     startButton = assetManager.getSprite("Assets", "PlayButtonPH", 300, 400);
     stage.addChild(startButton);
-    startButton.addEventListener("click", monitorClicks);
+    startButton.on("click", monitorClicks);
     gameScreen = assetManager.getSprite("Assets", "GameScreenBackGround1PH");
     player = new Player_1.default(stage, assetManager);
     document.onkeydown = onKeyDown;
@@ -10232,10 +10235,7 @@ function onReady(e) {
 }
 function monitorClicks(e) {
     if (e.target = startButton) {
-        stage.removeChild(background);
-        stage.removeChild(startButton);
-        e.remove();
-        stage.addChildAt(gameScreen, 0);
+        startGame();
     }
 }
 function monitorKeys() {
@@ -10255,6 +10255,12 @@ function monitorKeys() {
         player.stopMe();
     }
 }
+function startGame() {
+    stage.removeChild(background);
+    stage.removeChild(startButton);
+    stage.addChildAt(gameScreen, 0);
+    player.showMe();
+}
 function onKeyDown(e) {
     console.log("key pressed down: " + e.key);
     if (e.key == "ArrowLeft")
@@ -10263,6 +10269,9 @@ function onKeyDown(e) {
         rightKey = true;
     else if (e.key == "ArrowUp")
         upKey = true;
+    if (e.key == " ") {
+        spacebar = true;
+    }
 }
 function onKeyUp(e) {
     console.log("key released up: " + e.key);
@@ -10271,6 +10280,7 @@ function onKeyUp(e) {
     else if (e.key == "ArrowRight")
         rightKey = false;
     if (e.key == " ") {
+        spacebar = false;
         console.log("JUMP!!!");
     }
 }
@@ -10313,8 +10323,7 @@ class Player {
         this._moving = false;
         this.stage = stage;
         this._sprite = assetManager.getSprite("Assets", "PlayerPH", 50, 500);
-        this.eventPassedLevel = new createjs.Event("levelPass", true, false);
-        stage.addChild(this._sprite);
+        this.eventPassedLevel = new createjs.Event("levelPassed", true, false);
     }
     get sprite() {
         return this._sprite;
@@ -10354,11 +10363,20 @@ class Player {
         this._sprite.x = x;
         this._sprite.y = y;
     }
+    showMe() {
+        this.stage.addChild(this._sprite);
+    }
+    hideMe() {
+        this.stopMe();
+        this.stage.removeChild(this._sprite);
+    }
     killMe() {
         this.stopMe();
         this._sprite.on("animationend", () => {
             this._sprite.stop();
             this.stage.removeChild(this._sprite);
+            this.positionMe(Constants_1.SPAWNPOINT_X, Constants_1.SPAWNPOINT_Y);
+            this.stage.addChild(this._sprite);
         });
         this._sprite.gotoAndPlay("PlayerPH");
     }

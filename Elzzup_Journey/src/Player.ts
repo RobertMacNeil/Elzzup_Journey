@@ -1,5 +1,5 @@
 import AssetManager from "./AssetManager";
-import { STAGE_WIDTH, STAGE_HEIGHT } from "./Constants";
+import { STAGE_WIDTH, STAGE_HEIGHT, SPAWNPOINT_X, SPAWNPOINT_Y } from "./Constants";
 
 export default class Player {
     // class constants for readability 
@@ -14,6 +14,7 @@ export default class Player {
     private _speed:number;
     private _direction:number;
     private _moving:boolean;
+    private _grounded:boolean;
     private stage:createjs.StageGL;
 
     // the Plane's sprite object
@@ -29,9 +30,7 @@ export default class Player {
         this._sprite = assetManager.getSprite("Assets", "PlayerPH", 50, 500);
 
         // construct custom event object for object moving off stage
-        this.eventPassedLevel = new createjs.Event("levelPass", true, false);
-
-        stage.addChild(this._sprite);
+        this.eventPassedLevel = new createjs.Event("levelPassed", true, false);
     }
 
     // ------------------------------------------------ gets/sets
@@ -81,11 +80,24 @@ export default class Player {
         this._sprite.y = y;
     }
 
+    public showMe():void{
+        this.stage.addChild(this._sprite);
+    }
+
+    public hideMe():void{
+        this.stopMe();
+        this.stage.removeChild(this._sprite);
+    }
+
     public killMe():void {
         this.stopMe();
         this._sprite.on("animationend", () => {
             this._sprite.stop();
             this.stage.removeChild(this._sprite);
+
+            //respawn
+            this.positionMe(SPAWNPOINT_X, SPAWNPOINT_Y);
+            this.stage.addChild(this._sprite);
         });
         this._sprite.gotoAndPlay("PlayerPH");
     }

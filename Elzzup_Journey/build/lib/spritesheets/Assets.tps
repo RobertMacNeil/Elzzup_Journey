@@ -183,7 +183,7 @@
         <map type="IndividualSpriteSettingsMap">
             <key type="filename">Sprites/GameScreenBackGround1PH.png</key>
             <key type="filename">Sprites/GameScreenBackGround2PH.png</key>
-            <key type="filename">Sprites/TitleScreenPH.png</key>
+            <key type="filename">Sprites/TitleScreen.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0,0</point_f>
@@ -195,6 +195,21 @@
                 <rect>150,150,300,300</rect>
                 <key>scale9Paddings</key>
                 <rect>150,150,300,300</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">Sprites/Ground600Tile.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0,0</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>150,13,300,25</rect>
+                <key>scale9Paddings</key>
+                <rect>150,13,300,25</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -231,11 +246,7 @@
         </map>
         <key>fileList</key>
         <array>
-            <filename>Sprites/GameScreenBackGround1PH.png</filename>
-            <filename>Sprites/GameScreenBackGround2PH.png</filename>
-            <filename>Sprites/PlayButtonPH.png</filename>
-            <filename>Sprites/PlayerPH.png</filename>
-            <filename>Sprites/TitleScreenPH.png</filename>
+            <filename>Sprites</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

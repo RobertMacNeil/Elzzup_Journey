@@ -12,6 +12,7 @@ import Player from "./Player";
 let upKey:boolean = false;
 let leftKey:boolean = false;
 let rightKey:boolean = false;
+let spacebar:boolean = false;
 
 // game variables
 let stage:createjs.StageGL;
@@ -31,13 +32,13 @@ function onReady(e:createjs.Event):void {
 
     // construct game objects/sprites
     
-    background = assetManager.getSprite("Assets", "TitleScreenPH");
+    background = assetManager.getSprite("Assets", "TitleScreen");
     stage.addChild(background);
 
     startButton = assetManager.getSprite("Assets", "PlayButtonPH", 300, 400);
     stage.addChild(startButton);
 
-    startButton.addEventListener("click", monitorClicks);
+    startButton.on("click", monitorClicks);
 
     gameScreen = assetManager.getSprite("Assets", "GameScreenBackGround1PH");
 
@@ -55,10 +56,7 @@ function onReady(e:createjs.Event):void {
 //---------------------------------private methods
 function monitorClicks(e:createjs.Event):void {
     if (e.target = startButton){
-        stage.removeChild(background);
-        stage.removeChild(startButton);
-        e.remove();
-        stage.addChildAt(gameScreen, 0);
+        startGame();
     }
 }
 
@@ -85,12 +83,24 @@ function monitorKeys():void
     }
 }
 
+function startGame():void{
+    stage.removeChild(background);
+    stage.removeChild(startButton);
+    stage.addChildAt(gameScreen, 0);
+    player.showMe();
+}
+
 function onKeyDown(e:KeyboardEvent):void
 {
     console.log("key pressed down: " + e.key);
     if (e.key == "ArrowLeft") leftKey = true;
     else if (e.key == "ArrowRight") rightKey = true;
     else if (e.key == "ArrowUp") upKey = true;
+
+    if(e.key == " ")
+    {
+        spacebar = true;
+    }
 }
 
 function onKeyUp(e:KeyboardEvent):void
@@ -101,6 +111,7 @@ function onKeyUp(e:KeyboardEvent):void
 
     if(e.key == " ")
     {
+        spacebar = false;
         console.log("JUMP!!!");
     }
 }
