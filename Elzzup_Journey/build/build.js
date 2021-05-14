@@ -10207,6 +10207,7 @@ __webpack_require__(/*! createjs */ "./node_modules/createjs/builds/1.0.0/create
 const Constants_1 = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
 const AssetManager_1 = __webpack_require__(/*! ./AssetManager */ "./src/AssetManager.ts");
 const Player_1 = __webpack_require__(/*! ./Player */ "./src/Player.ts");
+const Ground_1 = __webpack_require__(/*! ./Ground */ "./src/Ground.ts");
 let upKey = false;
 let leftKey = false;
 let rightKey = false;
@@ -10218,6 +10219,7 @@ let background;
 let gameScreen;
 let startButton;
 let player;
+let ground;
 function onReady(e) {
     console.log(">> adding sprites to game");
     background = assetManager.getSprite("Assets", "TitleScreen");
@@ -10226,6 +10228,8 @@ function onReady(e) {
     stage.addChild(startButton);
     startButton.on("click", monitorClicks);
     gameScreen = assetManager.getSprite("Assets", "GameScreenBackGround1PH");
+    ground = new Ground_1.default(stage, assetManager);
+    ground.placeMe(0, 536, 19, 2);
     player = new Player_1.default(stage, assetManager);
     document.onkeydown = onKeyDown;
     document.onkeyup = onKeyUp;
@@ -10305,6 +10309,34 @@ main();
 
 /***/ }),
 
+/***/ "./src/Ground.ts":
+/*!***********************!*\
+  !*** ./src/Ground.ts ***!
+  \***********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+class Ground {
+    constructor(stage, assetManager) {
+        this.stage = stage;
+        this._sprite = assetManager.getSprite("Assets", "GroundPH");
+    }
+    placeMe(x = 300, y = 300, xScale = 1, yScale = 1) {
+        this._sprite.x = x;
+        this._sprite.y = y;
+        this._sprite.scaleX = xScale;
+        this._sprite.scaleY = yScale;
+        this.stage.addChild(this._sprite);
+    }
+}
+exports.default = Ground;
+
+
+/***/ }),
+
 /***/ "./src/Player.ts":
 /*!***********************!*\
   !*** ./src/Player.ts ***!
@@ -10324,6 +10356,8 @@ class Player {
         this.stage = stage;
         this._sprite = assetManager.getSprite("Assets", "PlayerPH", 50, 500);
         this.eventPassedLevel = new createjs.Event("levelPassed", true, false);
+        this.eventGrounded = new createjs.Event("grounded", true, false);
+        this.eventPlayerDeath = new createjs.Event("playerDeath", true, false);
     }
     get sprite() {
         return this._sprite;
@@ -10336,6 +10370,12 @@ class Player {
     }
     get moving() {
         return this._moving;
+    }
+    get grounded() {
+        return this._grounded;
+    }
+    get frozen() {
+        return this._frozen;
     }
     set direction(value) {
         this._direction = value;
@@ -10365,10 +10405,15 @@ class Player {
     }
     showMe() {
         this.stage.addChild(this._sprite);
+        this._frozen = false;
     }
     hideMe() {
         this.stopMe();
+        this._frozen = true;
         this.stage.removeChild(this._sprite);
+    }
+    freezeMe() {
+        this._frozen = true;
     }
     killMe() {
         this.stopMe();

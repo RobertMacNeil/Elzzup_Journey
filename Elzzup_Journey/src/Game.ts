@@ -7,6 +7,7 @@ import "createjs";
 import { STAGE_WIDTH, STAGE_HEIGHT, FRAME_RATE, ASSET_MANIFEST } from "./Constants";
 import AssetManager from "./AssetManager";
 import Player from "./Player";
+import Ground from "./Ground";
 
 //current state of keys
 let upKey:boolean = false;
@@ -25,6 +26,7 @@ let background:createjs.Sprite;
 let gameScreen:createjs.Sprite;
 let startButton:createjs.Sprite;
 let player:Player;
+let ground:Ground;
 
 // --------------------------------------------------- event handlers
 function onReady(e:createjs.Event):void {
@@ -42,6 +44,8 @@ function onReady(e:createjs.Event):void {
 
     gameScreen = assetManager.getSprite("Assets", "GameScreenBackGround1PH");
 
+    ground = new Ground(stage, assetManager);
+    ground.placeMe(0,536,19,2);
     player = new Player(stage, assetManager);
     
     document.onkeydown = onKeyDown;

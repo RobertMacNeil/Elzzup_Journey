@@ -9,15 +9,18 @@ export default class Player {
 
     // custom event
     private eventPassedLevel:createjs.Event;
+    private eventGrounded:createjs.Event;
+    private eventPlayerDeath:createjs.Event;
 
     // private property variables
     private _speed:number;
     private _direction:number;
     private _moving:boolean;
     private _grounded:boolean;
+    private _frozen:boolean;
     private stage:createjs.StageGL;
 
-    // the Plane's sprite object
+    // the Player's sprite object
     private _sprite:createjs.Sprite;
 
     constructor(stage:createjs.StageGL, assetManager:AssetManager) {
@@ -29,8 +32,10 @@ export default class Player {
 
         this._sprite = assetManager.getSprite("Assets", "PlayerPH", 50, 500);
 
-        // construct custom event object for object moving off stage
+        // construct custom events
         this.eventPassedLevel = new createjs.Event("levelPassed", true, false);
+        this.eventGrounded = new createjs.Event("grounded", true, false);
+        this.eventPlayerDeath = new createjs.Event("playerDeath", true, false);
     }
 
     // ------------------------------------------------ gets/sets
@@ -47,6 +52,14 @@ export default class Player {
 
     get moving() {
         return this._moving;   
+    }
+
+    get grounded(){
+        return this._grounded;
+    }
+
+    get frozen(){
+        return this._frozen;
     }
 
     set direction(value:number) {
@@ -82,11 +95,17 @@ export default class Player {
 
     public showMe():void{
         this.stage.addChild(this._sprite);
+        this._frozen = false;
     }
 
     public hideMe():void{
         this.stopMe();
+        this._frozen = true;
         this.stage.removeChild(this._sprite);
+    }
+
+    public freezeMe():void{
+        this._frozen = true;
     }
 
     public killMe():void {
