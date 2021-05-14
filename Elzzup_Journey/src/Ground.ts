@@ -17,5 +17,4 @@ export default class Ground{
         this._sprite.scaleY = yScale;
         this.stage.addChild(this._sprite);
     }
-
 }

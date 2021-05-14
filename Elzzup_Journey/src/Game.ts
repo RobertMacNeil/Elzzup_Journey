@@ -45,7 +45,7 @@ function onReady(e:createjs.Event):void {
     gameScreen = assetManager.getSprite("Assets", "GameScreenBackGround1PH");
 
     ground = new Ground(stage, assetManager);
-    ground.placeMe(0,536,19,2);
+
     player = new Player(stage, assetManager);
     
     document.onkeydown = onKeyDown;
@@ -91,6 +91,7 @@ function startGame():void{
     stage.removeChild(background);
     stage.removeChild(startButton);
     stage.addChildAt(gameScreen, 0);
+    ground.placeMe(0,536,19,2);
     player.showMe();
 }
 

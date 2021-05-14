@@ -10229,7 +10229,6 @@ function onReady(e) {
     startButton.on("click", monitorClicks);
     gameScreen = assetManager.getSprite("Assets", "GameScreenBackGround1PH");
     ground = new Ground_1.default(stage, assetManager);
-    ground.placeMe(0, 536, 19, 2);
     player = new Player_1.default(stage, assetManager);
     document.onkeydown = onKeyDown;
     document.onkeyup = onKeyUp;
@@ -10263,6 +10262,7 @@ function startGame() {
     stage.removeChild(background);
     stage.removeChild(startButton);
     stage.addChildAt(gameScreen, 0);
+    ground.placeMe(0, 536, 19, 2);
     player.showMe();
 }
 function onKeyDown(e) {
