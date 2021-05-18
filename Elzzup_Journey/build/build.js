@@ -10206,8 +10206,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __webpack_require__(/*! createjs */ "./node_modules/createjs/builds/1.0.0/createjs.min.js");
 const Constants_1 = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
 const AssetManager_1 = __webpack_require__(/*! ./AssetManager */ "./src/AssetManager.ts");
-const Player_1 = __webpack_require__(/*! ./Player */ "./src/Player.ts");
-const Ground_1 = __webpack_require__(/*! ./Ground */ "./src/Ground.ts");
 let upKey = false;
 let leftKey = false;
 let rightKey = false;
@@ -10215,83 +10213,22 @@ let spacebar = false;
 let stage;
 let canvas;
 let assetManager;
-let background;
-let gameScreen;
-let startButton;
-let player;
-let ground;
 function onReady(e) {
     console.log(">> adding sprites to game");
-    background = assetManager.getSprite("Assets", "TitleScreen");
-    stage.addChild(background);
-    startButton = assetManager.getSprite("Assets", "PlayButtonPH", 300, 400);
-    stage.addChild(startButton);
-    startButton.on("click", monitorClicks);
-    gameScreen = assetManager.getSprite("Assets", "GameScreenBackGround1PH");
-    ground = new Ground_1.default(stage, assetManager);
-    player = new Player_1.default(stage, assetManager);
     document.onkeydown = onKeyDown;
     document.onkeyup = onKeyUp;
     createjs.Ticker.framerate = Constants_1.FRAME_RATE;
     createjs.Ticker.on("tick", onTick);
     console.log(">> game ready");
 }
-function monitorClicks(e) {
-    if (e.target = startButton) {
-        startGame();
-    }
-}
-function monitorKeys() {
-    if (leftKey) {
-        player.direction = Player_1.default.LEFT;
-        player.startMe();
-    }
-    else if (rightKey) {
-        player.direction = Player_1.default.RIGHT;
-        player.startMe();
-    }
-    else if (upKey) {
-        player.direction = Player_1.default.UP;
-        player.startMe();
-    }
-    else {
-        player.stopMe();
-    }
-}
-function startGame() {
-    stage.removeChild(background);
-    stage.removeChild(startButton);
-    stage.addChildAt(gameScreen, 0);
-    ground.placeMe(0, 536, 19, 2);
-    player.showMe();
-}
 function onKeyDown(e) {
     console.log("key pressed down: " + e.key);
-    if (e.key == "ArrowLeft")
-        leftKey = true;
-    else if (e.key == "ArrowRight")
-        rightKey = true;
-    else if (e.key == "ArrowUp")
-        upKey = true;
-    if (e.key == " ") {
-        spacebar = true;
-    }
 }
 function onKeyUp(e) {
     console.log("key released up: " + e.key);
-    if (e.key == "ArrowLeft")
-        leftKey = false;
-    else if (e.key == "ArrowRight")
-        rightKey = false;
-    if (e.key == " ") {
-        spacebar = false;
-        console.log("JUMP!!!");
-    }
 }
 function onTick(e) {
     document.getElementById("fps").innerHTML = String(createjs.Ticker.getMeasuredFPS());
-    monitorKeys();
-    player.update();
     stage.update();
 }
 function main() {
@@ -10305,152 +10242,6 @@ function main() {
     assetManager.loadAssets(Constants_1.ASSET_MANIFEST);
 }
 main();
-
-
-/***/ }),
-
-/***/ "./src/Ground.ts":
-/*!***********************!*\
-  !*** ./src/Ground.ts ***!
-  \***********************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-class Ground {
-    constructor(stage, assetManager) {
-        this.stage = stage;
-        this._sprite = assetManager.getSprite("Assets", "GroundPH");
-    }
-    placeMe(x = 300, y = 300, xScale = 1, yScale = 1) {
-        this._sprite.x = x;
-        this._sprite.y = y;
-        this._sprite.scaleX = xScale;
-        this._sprite.scaleY = yScale;
-        this.stage.addChild(this._sprite);
-    }
-}
-exports.default = Ground;
-
-
-/***/ }),
-
-/***/ "./src/Player.ts":
-/*!***********************!*\
-  !*** ./src/Player.ts ***!
-  \***********************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-const Constants_1 = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
-class Player {
-    constructor(stage, assetManager) {
-        this._speed = 4;
-        this._direction = Player.RIGHT;
-        this._moving = false;
-        this.stage = stage;
-        this._sprite = assetManager.getSprite("Assets", "PlayerPH", 50, 500);
-        this.eventPassedLevel = new createjs.Event("levelPassed", true, false);
-        this.eventGrounded = new createjs.Event("grounded", true, false);
-        this.eventPlayerDeath = new createjs.Event("playerDeath", true, false);
-    }
-    get sprite() {
-        return this._sprite;
-    }
-    set speed(value) {
-        this._speed = value;
-    }
-    get speed() {
-        return this._speed;
-    }
-    get moving() {
-        return this._moving;
-    }
-    get grounded() {
-        return this._grounded;
-    }
-    get frozen() {
-        return this._frozen;
-    }
-    set direction(value) {
-        this._direction = value;
-        if (this._direction == Player.LEFT) {
-            if (this._sprite.scaleX < 0)
-                return;
-            this._sprite.scaleX = this._sprite.scaleX * -1;
-        }
-        else if (this._direction == Player.RIGHT) {
-            this._sprite.scaleX = Math.abs(this._sprite.scaleX * 1);
-        }
-    }
-    get direction() {
-        return this._direction;
-    }
-    startMe() {
-        this._sprite.play();
-        this._moving = true;
-    }
-    stopMe() {
-        this._sprite.stop();
-        this._moving = false;
-    }
-    positionMe(x, y) {
-        this._sprite.x = x;
-        this._sprite.y = y;
-    }
-    showMe() {
-        this.stage.addChild(this._sprite);
-        this._frozen = false;
-    }
-    hideMe() {
-        this.stopMe();
-        this._frozen = true;
-        this.stage.removeChild(this._sprite);
-    }
-    freezeMe() {
-        this._frozen = true;
-    }
-    killMe() {
-        this.stopMe();
-        this._sprite.on("animationend", () => {
-            this._sprite.stop();
-            this.stage.removeChild(this._sprite);
-            this.positionMe(Constants_1.SPAWNPOINT_X, Constants_1.SPAWNPOINT_Y);
-            this.stage.addChild(this._sprite);
-        });
-        this._sprite.gotoAndPlay("PlayerPH");
-    }
-    update() {
-        if (this._moving) {
-            let sprite = this._sprite;
-            let height = sprite.getBounds().height;
-            if (this._direction == Player.LEFT) {
-                this._sprite.x = this._sprite.x - this._speed;
-                if (this._sprite.x < -(height / 2)) {
-                    this._sprite.x = Constants_1.STAGE_WIDTH + (height / 2);
-                    sprite.dispatchEvent(this.eventPassedLevel);
-                    ;
-                }
-            }
-            else if (this._direction == Player.RIGHT) {
-                this._sprite.x = this._sprite.x + this._speed;
-                if (this._sprite.x > (Constants_1.STAGE_WIDTH + (height / 2))) {
-                    this._sprite.x = -(height / 2);
-                    sprite.dispatchEvent(this.eventPassedLevel);
-                }
-            }
-        }
-    }
-}
-exports.default = Player;
-Player.LEFT = 1;
-Player.RIGHT = 2;
-Player.UP = 3;
 
 
 /***/ }),
