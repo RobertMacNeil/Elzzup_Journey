@@ -7,6 +7,8 @@ import "createjs";
 import { STAGE_WIDTH, STAGE_HEIGHT, FRAME_RATE, ASSET_MANIFEST } from "./Constants";
 // importing Assestmanager // should only be one copy throughout game
 import AssetManager from "./AssetManager";
+import Player from "./Player";
+import ScreenManager from "./ScreenManager";
 
 //current state of keys
 let upKey:boolean = false;
@@ -22,13 +24,18 @@ let canvas:HTMLCanvasElement;
 let assetManager:AssetManager;
 
 //Game objects
-
+let screen:ScreenManager;
+let player:Player;
 
 // --------------------------------------------------- event handlers
 function onReady(e:createjs.Event):void {
     console.log(">> adding sprites to game");
 
     // construct game objects/sprites
+
+    screen = new ScreenManager(stage, assetManager);
+
+    player = new Player(stage, assetManager);
     
     document.onkeydown = onKeyDown;
     document.onkeyup = onKeyUp;
@@ -57,6 +64,7 @@ function onTick(e:createjs.Event):void {
     document.getElementById("fps").innerHTML = String(createjs.Ticker.getMeasuredFPS());
 
     // This is your game loop :)
+    player.update();
 
     // update the stage!
     stage.update();

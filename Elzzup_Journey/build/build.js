@@ -10206,6 +10206,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __webpack_require__(/*! createjs */ "./node_modules/createjs/builds/1.0.0/createjs.min.js");
 const Constants_1 = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
 const AssetManager_1 = __webpack_require__(/*! ./AssetManager */ "./src/AssetManager.ts");
+const Player_1 = __webpack_require__(/*! ./Player */ "./src/Player.ts");
+const ScreenManager_1 = __webpack_require__(/*! ./ScreenManager */ "./src/ScreenManager.ts");
 let upKey = false;
 let leftKey = false;
 let rightKey = false;
@@ -10213,8 +10215,12 @@ let spacebar = false;
 let stage;
 let canvas;
 let assetManager;
+let screen;
+let player;
 function onReady(e) {
     console.log(">> adding sprites to game");
+    screen = new ScreenManager_1.default(stage, assetManager);
+    player = new Player_1.default(stage, assetManager);
     document.onkeydown = onKeyDown;
     document.onkeyup = onKeyUp;
     createjs.Ticker.framerate = Constants_1.FRAME_RATE;
@@ -10229,6 +10235,7 @@ function onKeyUp(e) {
 }
 function onTick(e) {
     document.getElementById("fps").innerHTML = String(createjs.Ticker.getMeasuredFPS());
+    player.update();
     stage.update();
 }
 function main() {
@@ -10242,6 +10249,131 @@ function main() {
     assetManager.loadAssets(Constants_1.ASSET_MANIFEST);
 }
 main();
+
+
+/***/ }),
+
+/***/ "./src/Player.ts":
+/*!***********************!*\
+  !*** ./src/Player.ts ***!
+  \***********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const Constants_1 = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
+class Player {
+    constructor(stage, assetManager) {
+        this.stage = stage;
+        this._speed = 5;
+        this._sprite = assetManager.getSprite("Assets", "PlayerPH", 0, 0);
+        this.width = this._sprite.getBounds().width;
+        this._direction = Player.RIGHT;
+        this._state = Player.STATE_IDLE;
+        this.eventDeath = new createjs.Event("death", true, false);
+        this.eventLevelPassed = new createjs.Event("levelPassed", true, false);
+    }
+    get direction() {
+        return this._direction;
+    }
+    set direction(value) {
+        this._direction = value;
+        if (this._direction == Player.LEFT) {
+            if (this._sprite.scaleX < 0)
+                return;
+            this._sprite.scaleX = this._sprite.scaleX * -1;
+        }
+        else if (this._direction == Player.RIGHT) {
+            this._sprite.scaleX = Math.abs(this._sprite.scaleX * 1);
+        }
+    }
+    get state() {
+        return this._state;
+    }
+    set state(value) {
+        this._state = value;
+    }
+    set speed(value) {
+        this._speed = value;
+    }
+    get speed() {
+        return this._speed;
+    }
+    showMe() {
+        this.stage.addChild(this._sprite);
+        this._state = Player.STATE_IDLE;
+        this._sprite.play();
+    }
+    removeMe() {
+        this.stage.removeChild(this._sprite);
+        this._state = Player.STATE_IDLE;
+        this._sprite.stop();
+    }
+    positionMe(x, y) {
+        this._sprite.x = x;
+        this._sprite.y = y;
+    }
+    update() {
+        if (this._state == Player.STATE_MOVING) {
+            let sprite = this._sprite;
+            let width = this.width;
+            if (this._direction == Player.LEFT) {
+                this._sprite.x = this._sprite.x - this._speed;
+                if (this._sprite.x < 0) {
+                    this._sprite.x = (width / 2);
+                }
+            }
+            else if (this._direction == Player.RIGHT) {
+                this._sprite.x = this._sprite.x + this._speed;
+                if (this._sprite.x > (Constants_1.STAGE_WIDTH + (width / 2))) {
+                    this._sprite.x = -(width / 2);
+                    sprite.dispatchEvent(this.eventLevelPassed);
+                }
+            }
+        }
+    }
+}
+exports.default = Player;
+Player.LEFT = 1;
+Player.RIGHT = 2;
+Player.STATE_IDLE = 3;
+Player.STATE_MOVING = 4;
+Player.STATE_DYING = 5;
+Player.STATE_DEAD = 6;
+
+
+/***/ }),
+
+/***/ "./src/ScreenManager.ts":
+/*!******************************!*\
+  !*** ./src/ScreenManager.ts ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+class ScreenManager {
+    constructor(stage, assetManager) {
+        this.stage = stage;
+        this.titleScreen = new createjs.Container;
+        this.titleScreen.addChild(assetManager.getSprite("Assets", "TitleScreen", 0, 0));
+        this.startButton = assetManager.getSprite("Assets", "PlayButtonPH", 300, 450);
+        this.titleScreen.addChild(this.startButton);
+        this.stage.addChild(this.titleScreen);
+        this.creditScreen = new createjs.Container;
+        this.victoryScreen = new createjs.Container;
+    }
+}
+exports.default = ScreenManager;
+ScreenManager.TITLE_SCREEN = 1;
+ScreenManager.CREDIT_SCREEN = 2;
+ScreenManager.VICTORY_SCREEN = 3;
+ScreenManager.WORLD_ONE_SCREEN = 4;
+ScreenManager.WORLD_TWO_SCREEN = 5;
 
 
 /***/ }),
