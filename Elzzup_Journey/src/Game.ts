@@ -24,7 +24,7 @@ let canvas:HTMLCanvasElement;
 let assetManager:AssetManager;
 
 //Game objects
-let screen:ScreenManager;
+let screenManager:ScreenManager;
 let player:Player;
 
 // --------------------------------------------------- event handlers
@@ -33,7 +33,8 @@ function onReady(e:createjs.Event):void {
 
     // construct game objects/sprites
 
-    screen = new ScreenManager(stage, assetManager);
+    screenManager = new ScreenManager(stage, assetManager);
+    screenManager.showTitle();
 
     player = new Player(stage, assetManager);
     

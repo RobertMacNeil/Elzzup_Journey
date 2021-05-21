@@ -1,0 +1,31 @@
+{
+
+"images": [
+    "Assets.png"
+],
+
+"framerate": 30,
+"frames": [
+    [1, 1, 600, 600, 0, 0, 0],
+    [1, 603, 600, 600, 0, 0, 0],
+    [603, 603, 32, 32, 0, 0, 0],
+    [637, 603, 128, 64, 0, 64, 32],
+    [767, 603, 20, 64, 0, 9, 32],
+    [1, 1205, 600, 600, 0, 0, 0]
+],
+
+"animations": {
+    "GameScreenBackGround1PH": { "frames": [0] },
+    "GameScreenBackGround2PH": { "frames": [1] },
+    "GroundPH": { "frames": [2] },
+    "PlayButtonPH": { "frames": [3] },
+    "PlayerPH": { "frames": [4] },
+    "TitleScreen": { "frames": [5] }
+},
+
+"texturepacker": [
+        "SmartUpdateHash: $TexturePacker:SmartUpdate:3ceb453f3607dc2125f1cb6496c1cbd6:bd85342eff0ea39c81fda2420a50623f:343a2cbedbd3a58ea401ebc8df9c4834$",
+        "Created with TexturePacker (https://www.codeandweb.com/texturepacker) for EaselJS"
+]
+
+}

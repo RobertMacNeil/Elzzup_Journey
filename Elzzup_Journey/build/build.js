@@ -10215,11 +10215,12 @@ let spacebar = false;
 let stage;
 let canvas;
 let assetManager;
-let screen;
+let screenManager;
 let player;
 function onReady(e) {
     console.log(">> adding sprites to game");
-    screen = new ScreenManager_1.default(stage, assetManager);
+    screenManager = new ScreenManager_1.default(stage, assetManager);
+    screenManager.showTitle();
     player = new Player_1.default(stage, assetManager);
     document.onkeydown = onKeyDown;
     document.onkeyup = onKeyUp;
@@ -10359,21 +10360,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 class ScreenManager {
     constructor(stage, assetManager) {
         this.stage = stage;
-        this.titleScreen = new createjs.Container;
-        this.titleScreen.addChild(assetManager.getSprite("Assets", "TitleScreen", 0, 0));
-        this.startButton = assetManager.getSprite("Assets", "PlayButtonPH", 300, 450);
-        this.titleScreen.addChild(this.startButton);
-        this.stage.addChild(this.titleScreen);
-        this.creditScreen = new createjs.Container;
-        this.victoryScreen = new createjs.Container;
+        this.titleScreen = assetManager.getSprite("Assets", "TitleScreen", 0, 0);
+        this.eventStartGame = new createjs.Event("gameStart", true, false);
+        this.eventResetGame = new createjs.Event("gameReset", true, false);
+    }
+    showTitle() {
+        this.hideAll();
+        this.stage.addChildAt(this.titleScreen, 0);
+        this.stage.on("click", (e) => {
+            this.stage.dispatchEvent(this.eventStartGame);
+        }, this, true);
+    }
+    hideAll() {
+        this.stage.removeChild(this.titleScreen);
+        this.stage.removeChild(this.worldOneScreen);
+        this.stage.removeChild(this.worldTwoScreen);
+        this.stage.removeChild(this.creditScreen);
+        this.stage.removeChild(this.victoryScreen);
     }
 }
 exports.default = ScreenManager;
-ScreenManager.TITLE_SCREEN = 1;
-ScreenManager.CREDIT_SCREEN = 2;
-ScreenManager.VICTORY_SCREEN = 3;
-ScreenManager.WORLD_ONE_SCREEN = 4;
-ScreenManager.WORLD_TWO_SCREEN = 5;
 
 
 /***/ }),

@@ -2,37 +2,48 @@ import AssetManager from "./AssetManager";
 
 export default class ScreenManager{
 
-    public static TITLE_SCREEN:number = 1;
-    public static CREDIT_SCREEN:number = 2;
-    public static VICTORY_SCREEN:number = 3;
-    public static WORLD_ONE_SCREEN:number = 4;
-    public static WORLD_TWO_SCREEN:number = 5;
-
     private stage:createjs.StageGL;
 
-    private screen:createjs.Sprite;
-
-    private titleScreen:createjs.Container;
-    private startButton:createjs.Sprite;
-    private creditScreen:createjs.Container;
-    private victoryScreen:createjs.Container;
+    //screens
+    private titleScreen:createjs.Sprite;
     private worldOneScreen:createjs.Sprite;
     private worldTwoScreen:createjs.Sprite;
+    private creditScreen:createjs.Sprite;
+    private victoryScreen:createjs.Sprite;
+
+    //events
+    private eventStartGame:createjs.Event;
+    private eventResetGame:createjs.Event;
 
     constructor(stage:createjs.StageGL, assetManager:AssetManager){
         this.stage = stage;
 
-        this.titleScreen = new createjs.Container;
-        this.titleScreen.addChild(assetManager.getSprite("Assets", "TitleScreen", 0, 0));
+        //init game screens
+        this.titleScreen = assetManager.getSprite("Assets", "TitleScreen", 0, 0);
 
-        this.startButton = assetManager.getSprite("Assets", "PlayButtonPH", 300, 450);
-        
-        this.titleScreen.addChild(this.startButton);
+        // construct custom events
+        this.eventStartGame = new createjs.Event("gameStart", true, false);
+        this.eventResetGame = new createjs.Event("gameReset", true, false);
+    }
 
-        this.stage.addChild(this.titleScreen);
+    public showTitle():void {         
+        // show the title screen
+        this.hideAll();
+        this.stage.addChildAt(this.titleScreen, 0);
 
-        this.creditScreen = new createjs.Container;
-        this.victoryScreen = new createjs.Container;
+        // detect click on the stage to remove title screen and start the game
+        this.stage.on("click", (e) => {
+            this.stage.dispatchEvent(this.eventStartGame);
+        }, this, true);        
+    }
+
+    // --------------------------------------------------- private method
+    private hideAll():void {
+        this.stage.removeChild(this.titleScreen);
+        this.stage.removeChild(this.worldOneScreen);
+        this.stage.removeChild(this.worldTwoScreen);
+        this.stage.removeChild(this.creditScreen);
+        this.stage.removeChild(this.victoryScreen);
     }
 
 }
