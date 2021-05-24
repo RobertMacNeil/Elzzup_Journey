@@ -10161,8 +10161,8 @@ exports.ASSET_MANIFEST = exports.SPAWNPOINT_Y = exports.SPAWNPOINT_X = exports.F
 exports.STAGE_WIDTH = 600;
 exports.STAGE_HEIGHT = 600;
 exports.FRAME_RATE = 30;
-exports.SPAWNPOINT_X = 50;
-exports.SPAWNPOINT_Y = 400;
+exports.SPAWNPOINT_X = 30;
+exports.SPAWNPOINT_Y = 468;
 exports.ASSET_MANIFEST = [
     {
         type: "json",
@@ -10214,28 +10214,90 @@ let rightKey = false;
 let spacebar = false;
 let stage;
 let canvas;
+let level;
 let assetManager;
 let screenManager;
 let player;
 function onReady(e) {
     console.log(">> adding sprites to game");
+    upKey = false;
+    leftKey = false;
+    rightKey = false;
+    spacebar = false;
     screenManager = new ScreenManager_1.default(stage, assetManager);
     screenManager.showTitle();
     player = new Player_1.default(stage, assetManager);
     document.onkeydown = onKeyDown;
     document.onkeyup = onKeyUp;
+    stage.on("levelPassed", onGameEvent);
+    stage.on("playerDeath", onGameEvent);
+    stage.on("gameStart", onGameEvent);
+    stage.on("gameReset", onGameEvent);
     createjs.Ticker.framerate = Constants_1.FRAME_RATE;
     createjs.Ticker.on("tick", onTick);
     console.log(">> game ready");
 }
+function onGameEvent(e) {
+    switch (e.type) {
+        case "gameStart":
+            screenManager.showWorldOne();
+            player.showMe();
+            break;
+        case "gameReset":
+            screenManager.showTitle();
+            player.resetMe();
+            player.removeMe();
+            break;
+        case "playerDeath":
+            player.killMe();
+            break;
+        case "levelPassed":
+            level++;
+            if (level == 4) {
+                screenManager.showWorldTwo();
+            }
+            else if (level >= 7)
+                break;
+    }
+}
+function monitorKeys() {
+    if (leftKey) {
+        player.direction = Player_1.default.LEFT;
+        player.startMe();
+    }
+    else if (rightKey) {
+        player.direction = Player_1.default.RIGHT;
+        player.startMe();
+    }
+    else {
+        player.stopMe();
+    }
+}
 function onKeyDown(e) {
     console.log("key pressed down: " + e.key);
+    if (e.key == "ArrowLeft")
+        leftKey = true;
+    else if (e.key == "ArrowRight")
+        rightKey = true;
+    else if (e.key == "ArrowUp")
+        upKey = true;
+    if (e.key == " ")
+        spacebar = true;
 }
 function onKeyUp(e) {
     console.log("key released up: " + e.key);
+    if (e.key == "ArrowLeft")
+        leftKey = false;
+    else if (e.key == "ArrowRight")
+        rightKey = false;
+    else if (e.key == "ArrowUp")
+        upKey = false;
+    if (e.key == " ")
+        spacebar = false;
 }
 function onTick(e) {
     document.getElementById("fps").innerHTML = String(createjs.Ticker.getMeasuredFPS());
+    monitorKeys();
     player.update();
     stage.update();
 }
@@ -10269,11 +10331,13 @@ class Player {
     constructor(stage, assetManager) {
         this.stage = stage;
         this._speed = 5;
-        this._sprite = assetManager.getSprite("Assets", "PlayerPH", 0, 0);
+        this._sprite = assetManager.getSprite("Assets", "PlayerPH");
         this.width = this._sprite.getBounds().width;
         this._direction = Player.RIGHT;
         this._state = Player.STATE_IDLE;
-        this.eventDeath = new createjs.Event("death", true, false);
+        this._sprite.x = Constants_1.SPAWNPOINT_X;
+        this._sprite.y = Constants_1.SPAWNPOINT_Y;
+        this.eventDeath = new createjs.Event("playerDeath", true, false);
         this.eventLevelPassed = new createjs.Event("levelPassed", true, false);
     }
     get direction() {
@@ -10312,9 +10376,28 @@ class Player {
         this._state = Player.STATE_IDLE;
         this._sprite.stop();
     }
+    startMe() {
+        this._sprite.play();
+        this._state = Player.STATE_MOVING;
+    }
+    stopMe() {
+        this._sprite.stop();
+        this._state = Player.STATE_IDLE;
+    }
     positionMe(x, y) {
         this._sprite.x = x;
         this._sprite.y = y;
+    }
+    killMe() {
+        this.stopMe();
+        this._sprite.on("animationend", (e) => this.removeMe(), this, true);
+        this._sprite.gotoAndPlay("playerPH");
+        this._sprite.dispatchEvent(this.eventDeath);
+    }
+    resetMe() {
+        this._sprite.x = Constants_1.SPAWNPOINT_X;
+        this._sprite.y = Constants_1.SPAWNPOINT_Y;
+        this.showMe();
     }
     update() {
         if (this._state == Player.STATE_MOVING) {
@@ -10361,6 +10444,7 @@ class ScreenManager {
     constructor(stage, assetManager) {
         this.stage = stage;
         this.titleScreen = assetManager.getSprite("Assets", "TitleScreen", 0, 0);
+        this.worldOneScreen = assetManager.getSprite("Assets", "GameScreenBackGround1PH", 0, 0);
         this.eventStartGame = new createjs.Event("gameStart", true, false);
         this.eventResetGame = new createjs.Event("gameReset", true, false);
     }
@@ -10369,6 +10453,28 @@ class ScreenManager {
         this.stage.addChildAt(this.titleScreen, 0);
         this.stage.on("click", (e) => {
             this.stage.dispatchEvent(this.eventStartGame);
+        }, this, true);
+    }
+    showWorldOne() {
+        this.hideAll();
+        this.stage.addChildAt(this.worldOneScreen, 0);
+    }
+    showWorldTwo() {
+        this.hideAll();
+        this.stage.addChildAt(this.worldTwoScreen, 0);
+    }
+    showVictory() {
+        this.hideAll();
+        this.stage.addChildAt(this.victoryScreen, 0);
+        this.stage.on("click", (e) => {
+            this.showCredit();
+        }, this, true);
+    }
+    showCredit() {
+        this.hideAll();
+        this.stage.addChildAt(this.creditScreen, 0);
+        this.stage.on("click", (e) => {
+            this.stage.dispatchEvent(this.eventResetGame);
         }, this, true);
     }
     hideAll() {

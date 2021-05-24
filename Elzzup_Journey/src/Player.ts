@@ -1,5 +1,5 @@
 import AssetManager from "./AssetManager";
-import { STAGE_WIDTH } from "./Constants";
+import { SPAWNPOINT_X, SPAWNPOINT_Y, STAGE_WIDTH } from "./Constants";
 
 export default class Player{
 
@@ -33,12 +33,15 @@ export default class Player{
     constructor(stage:createjs.StageGL, assetManager:AssetManager){
         this.stage = stage;
         this._speed = 5;
-        this._sprite = assetManager.getSprite("Assets", "PlayerPH", 0, 0);
+        this._sprite = assetManager.getSprite("Assets", "PlayerPH");
         this.width = this._sprite.getBounds().width;
         this._direction = Player.RIGHT;
         this._state = Player.STATE_IDLE;
 
-        this.eventDeath = new createjs.Event("death", true, false);
+        this._sprite.x = SPAWNPOINT_X;
+        this._sprite.y = SPAWNPOINT_Y;
+
+        this.eventDeath = new createjs.Event("playerDeath", true, false);
         this.eventLevelPassed = new createjs.Event("levelPassed", true, false);
     }
 
@@ -85,9 +88,32 @@ export default class Player{
         this._sprite.stop();
     }
 
+    public startMe():void {
+        this._sprite.play();
+        this._state = Player.STATE_MOVING;
+    }
+
+    public stopMe():void {
+        this._sprite.stop();
+        this._state = Player.STATE_IDLE;
+    }
+
     public positionMe(x:number, y:number):void{
         this._sprite.x = x;
         this._sprite.y = y;
+    }
+
+    public killMe():void{
+        this.stopMe();
+        this._sprite.on("animationend", (e:createjs.Event) => this.removeMe(), this, true);
+        this._sprite.gotoAndPlay("playerPH");
+        this._sprite.dispatchEvent(this.eventDeath);
+    }
+
+    public resetMe():void{
+        this._sprite.x = SPAWNPOINT_X;
+        this._sprite.y = SPAWNPOINT_Y;
+        this.showMe();
     }
 
     public update():void {
@@ -97,13 +123,13 @@ export default class Player{
             let sprite:createjs.Sprite = this._sprite;
             let width:number = this.width
 
-            if (this._direction == Player.LEFT) {
+                if (this._direction == Player.LEFT) {
                 // moving left
                 this._sprite.x = this._sprite.x - this._speed;
                 if (this._sprite.x < 0) {
                     this._sprite.x = (width / 2);
                 }
-            } else if (this._direction == Player.RIGHT) {
+                } else if (this._direction == Player.RIGHT) {
                 // moving right
                 this._sprite.x = this._sprite.x + this._speed;
                 if (this._sprite.x > (STAGE_WIDTH + (width / 2))) {

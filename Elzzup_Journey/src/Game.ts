@@ -20,6 +20,8 @@ let spacebar:boolean = false;
 let stage:createjs.StageGL;
 let canvas:HTMLCanvasElement;
 
+let level:number;
+
 // assetmanager object
 let assetManager:AssetManager;
 
@@ -31,6 +33,12 @@ let player:Player;
 function onReady(e:createjs.Event):void {
     console.log(">> adding sprites to game");
 
+    //initializing key booleans
+    upKey = false;
+    leftKey = false;
+    rightKey = false;
+    spacebar = false;
+    
     // construct game objects/sprites
 
     screenManager = new ScreenManager(stage, assetManager);
@@ -41,23 +49,87 @@ function onReady(e:createjs.Event):void {
     document.onkeydown = onKeyDown;
     document.onkeyup = onKeyUp;
 
+    // listen for game events
+    stage.on("levelPassed", onGameEvent);
+    stage.on("playerDeath", onGameEvent);
+    stage.on("gameStart", onGameEvent);
+    stage.on("gameReset", onGameEvent);
+
     // startup the ticker
     createjs.Ticker.framerate = FRAME_RATE;
     createjs.Ticker.on("tick", onTick);     
     console.log(">> game ready");
 }
 
-//---------------------------------private methods
+//eventhandler
+function onGameEvent(e:createjs.Event) {
+    switch (e.type) {
+        case "gameStart":
+            screenManager.showWorldOne();
+            player.showMe();
 
+            break;
+
+        case "gameReset":
+            screenManager.showTitle();
+
+            player.resetMe();
+            player.removeMe();
+            
+            break;
+
+        case "playerDeath":
+            player.killMe();
+            
+            break;
+        case "levelPassed":
+            level++;
+            if(level == 4){
+                screenManager.showWorldTwo();
+            }
+            else if(level >= 7)
+
+            break;
+    }
+}
+
+//---------------------------------private methods
+function monitorKeys():void
+{
+    if (leftKey)
+    {
+        player.direction = Player.LEFT;
+        player.startMe();
+    }
+    else if (rightKey)
+    {
+        player.direction = Player.RIGHT;
+        player.startMe();
+    }
+    else
+    {
+        player.stopMe();
+    }
+}
 
 function onKeyDown(e:KeyboardEvent):void
 {
     console.log("key pressed down: " + e.key);
+    if (e.key == "ArrowLeft") leftKey = true;
+    else if (e.key == "ArrowRight") rightKey = true;
+    else if (e.key == "ArrowUp") upKey = true;
+
+    if (e.key == " ") spacebar = true;
 }
 
 function onKeyUp(e:KeyboardEvent):void
 {
     console.log("key released up: " + e.key);
+    if (e.key == "ArrowLeft") leftKey = false;
+    else if (e.key == "ArrowRight") rightKey = false;
+    else if (e.key == "ArrowUp") upKey = false;
+
+    if (e.key == " ") spacebar = false;
 }
 
 function onTick(e:createjs.Event):void {
@@ -65,6 +137,7 @@ function onTick(e:createjs.Event):void {
     document.getElementById("fps").innerHTML = String(createjs.Ticker.getMeasuredFPS());
 
     // This is your game loop :)
+    monitorKeys();
     player.update();
 
     // update the stage!
